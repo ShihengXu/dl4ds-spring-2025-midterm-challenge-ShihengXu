@@ -1,0 +1,99 @@
+# CIFAR-100 Model Training Report
+
+## **1. Model Description**
+
+This report details the training of three different models on the CIFAR-100 dataset:
+1. **Simple CNN (Part 1)**: A basic convolutional neural network to establish a baseline.
+2. **ResNet50 (Part 2)**: A more advanced deep learning architecture from torchvision.
+3. **EfficientNet-B3 (Part 3)**: A pretrained model fine-tuned on CIFAR-100.
+
+Each model was trained and evaluated based on accuracy and robustness.
+
+---
+
+## **2. Hyperparameter Tuning**
+
+| Hyperparameter       | Simple CNN | ResNet50 | EfficientNet-B3 |
+|---------------------|------------|------------|------------|
+| Batch Size         | 64        | 64        | 128        |
+| Learning Rate      | 0.001      | 0.001     | 0.0003     |
+| Epochs            | 20         | 20         | 100        |
+| Optimizer         | Adam       | Adam      | AdamW      |
+| Regularization    | Dropout (0.5) | Weight Decay (1e-4) | Label Smoothing (0.1) |
+
+The most effective configuration was found for EfficientNet-B3, with a lower learning rate and longer training.
+
+---
+
+## **3. Regularization Techniques**
+
+- **Dropout** was used in the Simple CNN model to prevent overfitting.
+- **Weight decay** was applied in ResNet50 and EfficientNet-B3.
+- **Stochastic Weight Averaging (SWA)** and **Exponential Moving Average (EMA)** helped stabilize training in EfficientNet-B3.
+- **Label smoothing** (0.1) was used in EfficientNet-B3 to improve generalization.
+
+---
+
+## **4. Data Augmentation Strategy**
+
+| Data Augmentation | Simple CNN | ResNet50 | EfficientNet-B3 |
+|------------------|------------|------------|------------|
+| Random Resized Crop | ❌ | ✅ | ✅ |
+| Horizontal Flip  | ✅ | ✅ | ✅ |
+| Color Jitter     | ❌ | ✅ | ✅ |
+| Random Rotation  | ❌ | ✅ | ✅ |
+| RandAugment      | ❌ | ❌ | ✅ |
+
+EfficientNet-B3 used the most extensive augmentation, including **RandAugment**.
+
+---
+
+## **5. Results Analysis**
+
+| Model | Train Accuracy | Validation Accuracy |
+|--------------|----------------|----------------|
+| Simple CNN (Part 1) | 37.13% | 40.38% |
+| ResNet50 (Part 2) | 47.6% | 51.81% |
+| EfficientNet-B3 (Part 3) | 48.4% | 65.3% |
+
+### **Key Observations**
+- **EfficientNet-B3** clearly performed best, achieving **65.3%** validation accuracy, significantly better than ResNet50 and Simple CNN.
+- **ResNet50** provided better performance than the Simple CNN, demonstrating the value of deeper architectures.
+- The **Simple CNN** established a baseline but showed limited performance compared to more complex models.
+
+---
+
+## **6. Experiment Tracking Summary**
+
+### **WandB Tracking Results**
+Screenshots from experiment tracking indicate:
+- **EfficientNet-B3** demonstrated the highest stability and final accuracy.
+- **ResNet50** achieved moderate performance with quicker convergence.
+- **Simple CNN** plateaued early and exhibited lower overall accuracy.
+
+Tracking tools were critical in effectively comparing different training runs and configurations.
+
+---
+
+## **7. Challenges and Potential Issues**
+
+### **1. High Training Accuracy but Low OOD Performance**
+- A model achieved **99% train accuracy** but performed **poorly on OOD tests**.
+- This suggests **severe overfitting** and lack of robustness.
+- Future work: **Implement stronger regularization methods** such as CutMix or adversarial training.
+
+### **2. Long Training Times**
+- Most training runs took **5-10 hours**, especially EfficientNet-B3.
+- ResNet50 trained faster but still required **careful hyperparameter tuning**.
+- Future work: Optimize the training pipeline and consider **gradient accumulation or mixed precision training**.
+
+---
+
+## **8. Conclusion and Future Work**
+
+- **EfficientNet-B3** delivered the best validation accuracy (**65.3%**).
+- **ResNet50** showed noticeable improvement over the Simple CNN, demonstrating the effectiveness of deeper architectures.
+- **Future improvements** should focus on enhancing robustness, improving training efficiency, and leveraging advanced augmentation strategies.
+- Potential future directions include investigating **semi-supervised learning** and **self-distillation**.
+
+Overall, the project successfully demonstrated the impact of **transfer learning, data augmentation, and regularization techniques** on model performance for CIFAR-100 classification.
